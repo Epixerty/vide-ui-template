@@ -1,0 +1,12 @@
+{
+  "name": "vide-ui-template",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "ui": {
+        "$path": "src/ui"
+      }
+    }
+  }
+}
