@@ -1,7 +1,9 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Vide = require(ReplicatedStorage.ui.Vide)
+local Globals = require(ReplicatedStorage.ui.state.globals)
 local App = require(script.Parent.App)
 
 local usePx = require(ReplicatedStorage.ui.utils.use_px)
@@ -17,3 +19,8 @@ local screenGui = create("ScreenGui") {
 
 root(usePx.mount)
 mount(App, screenGui)
+
+UserInputService:GetPropertyChangedSignal("PreferredInput"):Connect(function()
+	Globals.PreferredInput(UserInputService.PreferredInput)
+end)
+Globals.PreferredInput(UserInputService.PreferredInput)
