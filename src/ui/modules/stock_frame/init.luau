@@ -13,6 +13,7 @@ local Element = require(script.element)
 
 local create = Vide.create
 local source = Vide.source
+local action = Vide.action
 
 type Any<T> = Vide.Source<T> | T
 
@@ -66,80 +67,33 @@ return function(props: Props)
 		Size = px(UDim2.fromOffset(Styles.StockFrameXSize, Styles.StockFrameYSize)),
 		Position = props.Position,
 		Color = Styles.StockFrameBackgroundColor,
-		HasGradient = true,
-		HasVignette = true,
+		-- HasGradient = true,
+		-- HasVignette = true,
+		HasStroke = true,
 
 		ImageTransparency = 0.5,
+
+		-- workaround for stroke to cover header too
+
+		create("Frame") {
+			Position = UDim2.fromScale(0.5, 0),
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Size = px(UDim2.fromOffset(Styles.StockFrameXSize - 100, 50)),
+			create("UIStroke") {
+				Thickness = px(3),
+				Color = Styles.StockFrameBackgroundColor:Lerp(Color3.new(), 0.45),
+			},
+			create("UICorner") {
+				CornerRadius = UDim.new(0, 4),
+			},
+
+			ZIndex = -1,
+		},
 
 		Header {
 			Color = Styles.StockFrameHeaderColor,
 			Position = UDim2.fromScale(0.5, 0),
 			Size = px(UDim2.fromOffset(Styles.StockFrameXSize - 100, 50)),
-
-			create("Frame") {
-				Size = UDim2.fromScale(1, 1),
-				BackgroundTransparency = 1,
-
-				create("UIPadding") {
-					PaddingLeft = px(UDim.new(0, 8)),
-					PaddingRight = px(UDim.new(0, 8)),
-					PaddingTop = px(UDim.new(0, 8)),
-					PaddingBottom = px(UDim.new(0, 8)),
-				},
-
-				-- new stock text
-				create("TextLabel") {
-					BackgroundTransparency = 1,
-
-					Text = "New Stock in 4m 30s",
-					TextColor3 = Styles.MainTextColor,
-					FontFace = Font.new(Styles.MainTextFontId, Enum.FontWeight.Bold),
-					TextSize = px(28),
-					Size = UDim2.fromScale(1, 1),
-
-					TextXAlignment = Enum.TextXAlignment.Left,
-
-					create("UIPadding") {
-						PaddingLeft = UDim.new(0, 4),
-					},
-
-					create("UIStroke") {
-						Thickness = 2,
-						Transparency = 0.8,
-						Color = Styles.MainTextColor:Lerp(Color3.new(), 0.7),
-					},
-				},
-
-				-- close button
-				create("TextButton") {
-					-- BackgroundTransparency = 1,
-					BackgroundColor3 = Styles.CloseButtonColor,
-					Text = "X",
-					AutomaticSize = Enum.AutomaticSize.XY,
-					AnchorPoint = Vector2.new(1, 0.5),
-					Position = UDim2.fromScale(1, 0.5),
-					TextColor3 = Styles.MainTextColor,
-					FontFace = Font.fromName("GothamSSm", Enum.FontWeight.Bold),
-					TextSize = px(24),
-
-					create("UICorner") {
-						CornerRadius = UDim.new(0, 4),
-					},
-
-					create("UIStroke") {
-						Thickness = 2,
-						Transparency = 0.8,
-						Color = Styles.CloseButtonColor:Lerp(Color3.new(), 0.7),
-					},
-
-					create("UIPadding") {
-						PaddingLeft = px(UDim.new(0, 12)),
-						PaddingRight = px(UDim.new(0, 12)),
-						PaddingTop = px(UDim.new(0, 6)),
-						PaddingBottom = px(UDim.new(0, 6)),
-					},
-				},
-			},
 		},
 
 		List {
@@ -149,7 +103,7 @@ return function(props: Props)
 			-- create("UIStroke") {},
 			Vide.values(elements, function(element, i)
 				return Element {
-					Size = px(UDim2.fromOffset(110, 120)),
+					Size = px(UDim2.fromOffset(136, 150)),
 					Data = element,
 					LayoutOrder = i,
 				}
