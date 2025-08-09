@@ -4,6 +4,7 @@ local Vide = require(ReplicatedStorage.ui.Vide)
 local read = require(ReplicatedStorage.ui.Vide.read)
 local StudBackground = require(ReplicatedStorage.ui.components.stud_background)
 local Vignette = require(ReplicatedStorage.ui.components.vignette)
+local px = require(ReplicatedStorage.ui.utils.use_px)
 
 local create = Vide.create
 
@@ -15,6 +16,7 @@ type Props = {
 	Color: Any<Color3>,
 	HasGradient: boolean?,
 	HasVignette: boolean?,
+	HasStroke: boolean?,
 }
 
 return function(props: Props)
@@ -54,12 +56,12 @@ return function(props: Props)
 			CornerRadius = UDim.new(0, 4),
 		},
 
-		create("UIStroke") {
-			Thickness = 3,
+		props.HasStroke and create("UIStroke") {
+			Thickness = px(3),
 			Color = function()
 				local color = read(props.Color)
 
-				return color:Lerp(Color3.new(), 0.1)
+				return color:Lerp(Color3.new(), 0.45)
 			end,
 
 			props.HasGradient and create("UIGradient") {
