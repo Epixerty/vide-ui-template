@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Vide = require(ReplicatedStorage.ui.Vide)
+local px = require(ReplicatedStorage.ui.utils.use_px)
 
 local create = Vide.create
 local read = Vide.read
@@ -26,9 +27,7 @@ return function(props: Props)
 		ImageTransparency = props.ImageTransparency or 0,
 
 		ScaleType = Enum.ScaleType.Tile,
-		TileSize = function()
-			return UDim2.fromOffset(read(props.StudSize) or 24, read(props.StudSize) or 24)
-		end,
+		TileSize = px(UDim2.fromOffset(read(props.StudSize) or 24, read(props.StudSize) or 24)),
 
 		table.unpack(props),
 	}
