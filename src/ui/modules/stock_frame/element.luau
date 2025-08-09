@@ -1,11 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Vide = require(ReplicatedStorage.ui.Vide)
-local source = require(ReplicatedStorage.ui.Vide.source)
 local Styles = require(ReplicatedStorage.ui.styles)
 
 local Shadow = require(ReplicatedStorage.ui.components.shadow)
 local Vignette = require(ReplicatedStorage.ui.components.vignette)
+local Globals = require(ReplicatedStorage.ui.state.globals)
 
 local px = require(ReplicatedStorage.ui.utils.use_px)
 
@@ -44,8 +44,9 @@ end
 
 return function(props: Props)
 	local shadowThickness = 5
+	local buttonHeight = 36
 
-	local buttonSize = source(UDim2.new(1, 0 + shadowThickness * 2, 0, 28 + shadowThickness * 2))
+	local buttonSize = source(UDim2.new(1, 0 + shadowThickness * 2, 0, buttonHeight + shadowThickness * 2))
 	local imagePosition = source(UDim2.fromScale(0.5, 0.45))
 	local shadowTransparency = source(1)
 	local purchaseLabelRotation = source(0)
@@ -65,7 +66,7 @@ return function(props: Props)
 		LayoutOrder = props.LayoutOrder,
 
 		Vignette {
-			ImageTransparency = 0.7,
+			ImageTransparency = 0.8,
 
 			create("UICorner") {
 				CornerRadius = UDim.new(0, 4),
@@ -77,16 +78,24 @@ return function(props: Props)
 		},
 
 		create("UIStroke") {
-			Thickness = 1.5,
-			Color = Styles.ElementBackgroundColor:Lerp(Color3.new(), 0.35),
+			Thickness = px(1.5),
+			Color = Styles.ElementBackgroundColor:Lerp(Color3.new(), 0.25),
 		},
 
 		MouseEnter = function()
+			if Globals.PreferredInput() ~= Enum.PreferredInput.KeyboardAndMouse then
+				return
+			end
+
 			-- imagePosition(UDim2.new(0.5, 0, 0.45, -8))
 			imagePosition(UDim2.fromScale(0.5, 0.4))
 		end,
 
 		MouseLeave = function()
+			if Globals.PreferredInput() ~= Enum.PreferredInput.KeyboardAndMouse then
+				return
+			end
+
 			imagePosition(UDim2.fromScale(0.5, 0.45))
 		end,
 
@@ -184,7 +193,7 @@ return function(props: Props)
 				Transparency = shadowTransparencySpring,
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = function()
-					return px(UDim2.new(0.5, 0, 1, 3 - (28 + 6) / 2))()
+					return px(UDim2.new(0.5, 0, 1, 3 - (buttonHeight + 6) / 2))()
 				end,
 				Size = px(buttonSizeSpring),
 
@@ -209,23 +218,31 @@ return function(props: Props)
 					BackgroundColor3 = Styles.PurchaseButtonColor,
 
 					MouseEnter = function()
+						if Globals.PreferredInput() ~= Enum.PreferredInput.KeyboardAndMouse then
+							return
+						end
+
 						shadowTransparency(0)
 						purchaseLabelRotation(7)
 					end,
 
 					MouseLeave = function()
+						if Globals.PreferredInput() ~= Enum.PreferredInput.KeyboardAndMouse then
+							return
+						end
+
 						shadowTransparency(1)
 						purchaseLabelRotation(0)
 
-						buttonSize(UDim2.new(1, 0 + shadowThickness * 2, 0, 28 + shadowThickness * 2))
+						buttonSize(UDim2.new(1, 0 + shadowThickness * 2, 0, buttonHeight + shadowThickness * 2))
 					end,
 
 					MouseButton1Down = function()
-						buttonSize(UDim2.new(1, 0 + shadowThickness * 2 - 4, 0, 28 + shadowThickness * 2 - 4))
+						buttonSize(UDim2.new(1, 0 + shadowThickness * 2 - 4, 0, buttonHeight + shadowThickness * 2 - 4))
 					end,
 
 					MouseButton1Up = function()
-						buttonSize(UDim2.new(1, 0 + shadowThickness * 2, 0, 28 + shadowThickness * 2))
+						buttonSize(UDim2.new(1, 0 + shadowThickness * 2, 0, buttonHeight + shadowThickness * 2))
 					end,
 
 					create("UIGradient") {
